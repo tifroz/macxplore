@@ -191,10 +191,14 @@ window.TypeSelector = React.createClass({displayName: "TypeSelector",
     })(this))), React.createElement("div", null, ((function() {
       switch (this.props.type) {
         case "aggregate":
-          return React.createElement("a", {
-            "href": "https://docs.mongodb.org/v3.0/core/aggregation-introduction/",
+          React.createElement("a", {
+            "href": "https://docs.mongodb.org/v3.0/meta/aggregation-quick-reference/",
             "target": "_blank"
-          }, "Aggregation guide");
+          }, "Aggregation quick reference");
+          return React.createElement("a", {
+            "href": "https://docs.mongodb.org/v3.0/reference/operator/query/",
+            "target": "_blank"
+          }, "Aggregation query selectors \& operators");
         default:
           return React.createElement("div", null);
       }

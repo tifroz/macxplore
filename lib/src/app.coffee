@@ -1,5 +1,7 @@
 modules	= require 'modules'
 
+
+
 express				= require 'express'
 MongoDoc			= require 'macmodel'
 Seq 					= require 'seq'
@@ -31,6 +33,7 @@ xplore =
 		logger = l
 
 	start: (mongoConfig, port, fn)->
+		logger.log "Modules: #{_.keys(modules)}"
 		handlers = require 'handlers'
 
 		if mongoConfig.databases is undefined
