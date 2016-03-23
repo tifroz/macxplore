@@ -1,0 +1,38 @@
+extends layout
+
+block style
+	link(rel='stylesheet', href='/assets/css/main.less.css')
+	link(rel='stylesheet', href='/assets/lib/collapsiblejson/collapsiblejson.css')
+block script
+	script(type="text/javascript", src="//fb.me/react-0.14.7.js")
+	script(type="text/javascript", src="//fb.me/react-dom-0.14.7.js")
+	script(type="text/javascript", src="//cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.23/browser.min.js")
+	script(type="text/javascript", src="//cdnjs.cloudflare.com/ajax/libs/ace/1.2.3/ace.js")
+	script(type="text/javascript", src="//code.jquery.com/jquery-2.2.1.min.js")
+	script(type="text/javascript", src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js")
+
+block content
+	.container
+		.row
+			.col-xs-2
+				h4 Nav
+				#navigation
+			.col-xs-10
+				.row
+					.col-xs-12
+						#preview.resizable
+						#editor
+						
+	
+	script(type="text/javascript", src="/assets/lib/collapsiblejson/collapsiblejson.js")
+	script(type="text/javascript", src="/assets/xplore.js")
+	script(type="text/babel", src="/assets/common.js")
+	script(type="text/babel", src="/assets/menu.js")
+	script(type="text/babel", src="/assets/report-editor.js")
+	script(type="text/babel", src="/assets/report-preview.js")
+	script(type="text/babel", src="/assets/main.js")
+	script.
+		$(function() {
+			$("#preview").on(".resizable", (function() { console.log("resized") }))
+		})
+			

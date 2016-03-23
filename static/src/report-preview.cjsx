@@ -1,0 +1,191 @@
+window.CSVHead  = React.createClass
+	render: ->
+		console.log "Rendering head with ", @props
+		<thead>
+		{
+			cols = @props.data
+			<tr>
+				{cols.map (v, i)-> <th key={i}>{v}</th>}
+			</tr>
+		}
+		</thead>
+
+window.CSVBody = React.createClass
+	render: ->
+		console.log "Rendering body with ", @props
+		<tbody>
+		{
+			@props.data.map (r, i)->
+				<CSVRow key={i} data={r}/>
+		}
+		</tbody>
+
+window.CSVRow = React.createClass
+	render: ->
+		#cols = @props.data.split(",")
+		#cols = xplore.util.CSVToArray(@props.data, ",")
+		cols = @props.data
+		<tr>
+			{cols.map (v, i)-> <td key={i}>{v}</td>}
+		</tr>
+
+
+window.CSVTable = React.createClass
+	render: ->
+		console.log "Rendering table with ", @props
+		if @props.csv
+			#rows = @props.csv.split("\n")
+			rows = xplore.util.csv2Array(@props.csv, ",")
+			if rows.length > 0
+				head = rows.shift()
+				<table className="table-striped table-condensed table-responsive">
+					<CSVHead key="head" data={head}/>
+					<CSVBody key="body" data={rows}/>
+				</table>
+		else
+			return null
+
+window.JsonViewer = React.createClass
+	componentDidMount:->
+		window.IsCollapsible  = true
+		window.TAB = window.SINGLE_TAB
+		console.log "@props.doc", @props.doc
+		html = ProcessObject(@props.doc, 0, false, false, false);
+		$id("Canvas").innerHTML = "<PRE class='CodeContainer'>"+html+"</PRE>";
+	shouldComponentUpdate: ->
+		return true
+	componentDidUpdate: ->
+		html = ProcessObject(@props.doc, 0, false, false, false);
+		$id("Canvas").innerHTML = "<PRE class='CodeContainer'>"+html+"</PRE>";
+	render: ->
+		<div id="Canvas"></div>
+
+
+
+
+
+window.PreviewSelector = React.createClass
+	render: ->
+		<div className="btn-group" data-toggle="buttons">
+			{
+				@props.types.sort().map (t, i)=>
+					checked = t is @props.type
+					className = "btn btn-primary btn-xs"
+					if checked
+						className += " active"
+					<label key={i} className={className}  onClick={@selectionDidChange}>
+						<input type="radio" name="type" autoComplete="off" value={t} checked={checked} onChange={(->)}/>
+						<span> {t} </span>
+					</label>
+			}
+		</div>
+
+	selectionDidChange: (e)->
+		input = $("input", e.currentTarget)[0]
+		input.checked = true
+		@props.didChange @props.path, input.value
+
+
+
+window.ReportPreview = React.createClass
+	mixins: [AjaxMixin]
+	getInitialState: ->
+		state =
+			waiting: []
+			type: "sample doc"
+			doc: null
+			csv: null
+			xhr: null
+			reportId: null
+			reportName: null
+
+	componentDidMount:->
+		$("body").on "on didSelect", (e)=>
+			console.log "didSelect", e
+			@setState reportId: e.reportId
+			@setState reportName: e.reportName
+			@fetch e.reportId
+			
+		$("body").on "didUpdateQuery", (e)=>
+			console.log "on didUpdateQuery", e
+			@fetch e.reportId
+
+		@sizeMonitor = setInterval @monitorSize, 500
+
+	componentWillUnmount: ->
+		clearInterval @sizeMonitor
+
+	
+	render: ->
+		<div>
+			<XHRError xhr={@state.xhr}/>
+			{
+				if @state.doc or @state.csv
+					activityClasses = "activity"
+					if @state.waiting.length > 0
+						console.log "Waiting for #{@state.waiting}"
+						activityClasses += " on"
+					<div>
+						<PreviewSelector types={["sample doc", "sample result"]} path="type" type={@state.type} didChange={@didChange}/>
+						<div className="ouputLinks">
+							<a href={"/report/output/"+@state.reportId+"/"+@state.reportName+".csv"} target="_blank">csv file</a>
+						</div>
+						<div className={activityClasses}>
+							<img src="http://getsetgames.com/wp-content/uploads/2009/12/ActivityIndicator.gif"/>
+						</div>
+						{
+							if @state.type is "sample doc"
+								<JsonViewer doc={@state.doc}/>
+							else if @state.type is "sample result"
+								<CSVTable csv={@state.csv}/>
+						}
+					</div>
+				else
+					<div></div>
+			}
+		</div>
+
+	didChange: (path, value)->
+		console.log "ok Changed #{path}, #{value}"
+		@setState type: value
+
+	monitorSize: ->
+		if (h = $("#preview").height()) isnt @height
+			@height = h
+			e = $.Event( "previewPanelResized", height: h )
+			$("body").trigger(e)
+
+	fetch: (reportId)->
+		samplePath = "/report/sampledoc/#{reportId}"
+
+		@ajax samplePath, (xhr, update)=>
+			@doneWithFetch samplePath
+			if xhr.status > 0 and xhr.status < 400
+				console.log "xhr.responseText", doc: JSON.parse(xhr.responseText)
+				@setState doc: JSON.parse(xhr.responseText), xhr: "#{samplePath}": xhr
+			else
+				@setState xhr: "#{samplePath}": xhr
+
+
+		outputPath = "/report/output/#{reportId}/__sample.csv"
+		@ajax outputPath, (xhr, update)=>
+			@doneWithFetch outputPath
+			if xhr.status > 0 and xhr.status < 400
+				@setState csv: xhr.responseText, xhr: "#{outputPath}": xhr
+			else
+				@setState xhr: "#{outputPath}": xhr
+		@waitingForFetch [samplePath, outputPath]
+
+	waitingForFetch: (paths)->
+		waiting = @state.waiting
+		waiting = waiting.concat paths
+		@setState waiting: waiting
+
+	doneWithFetch: (path)->
+		waiting = @state.waiting
+		waiting = _.without waiting, path
+		@setState waiting: waiting
+
+
+
+

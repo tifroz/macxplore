@@ -1,0 +1,27 @@
+extends layout
+
+block style
+	link(rel='stylesheet', href='/assets/lib/collapsiblejson/collapsiblejson.css')
+block script
+	script(src="//fb.me/react-0.14.7.js")
+	script(src="//fb.me/react-dom-0.14.7.js")
+	script(src="//cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.23/browser.min.js")
+	script(src="//cdnjs.cloudflare.com/ajax/libs/ace/1.2.3/ace.js")
+	script(src="//code.jquery.com/jquery-2.2.1.min.js")
+	script(src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js")
+
+block content
+	.container
+		.row
+			.col-xs-12
+				.row
+					.col-xs-12
+						h4 Content
+						#Canvas
+	
+	script(src="/assets/lib/collapsiblejson/collapsiblejson.js")
+	script.
+		window.IsCollapsible  = true
+		window.TAB = window.SINGLE_TAB
+		html = ProcessObject({blah: {a:1}, ah:2}, 0, false, false, false);
+		$id("Canvas").innerHTML = "<PRE class='CodeContainer'>"+html+"</PRE>";

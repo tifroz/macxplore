@@ -1,0 +1,73 @@
+.ace-editor-wrapper {
+	position: relative ;
+}
+
+.ace-editor {
+	position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+
+.error-wrapper {
+	color: #f00;
+	.message {
+		font-weight: bold;
+	}
+	.stack {
+		font-size: 0.9em ;
+		color: #666 ;
+	}
+}
+
+.menu-item {
+	.menu-item-actions {
+		visibility: hidden ;
+		font-size: 8px ;
+	}
+}
+
+.menu-item:hover {
+	.menu-item-actions {
+		visibility: visible ;
+	}
+}
+
+.resizable {
+  width: 100%;
+  resize: vertical;
+  overflow: scroll;
+	height: 10px ;
+}
+
+#editor {
+	overflow-y: scroll ;
+	border: 1px solid #ccc ;
+}
+
+#preview {
+	overflow-y: scroll ;
+	border: 1px solid #ccc ;
+	min-height: 30px ;
+	table {
+		font-size: 12px ;
+		font-family: Arial, sans-serif;
+	}
+	.ouputLinks {
+		display: inline-block;
+		margin-left: 15px ;
+	}
+	.activity {
+		display: inline-block;
+		visibility: hidden;
+		margin-left: 15px ;
+		img {
+			height: 1em;
+		}
+	}
+	.activity.on {
+		visibility: visible;
+	}
+}
+
