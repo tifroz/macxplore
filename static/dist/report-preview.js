@@ -149,7 +149,21 @@ window.ReportPreview = React.createClass({displayName: "ReportPreview",
     $("body").on("didUpdateQuery", (function(_this) {
       return function(e) {
         console.log("on didUpdateQuery", e);
-        return _this.fetch(e.reportId);
+        if (e.updateSample) {
+          return _this.fetch(e.reportId);
+        }
+      };
+    })(this));
+    $("body").on("didRequestSampleUpdated", (function(_this) {
+      return function(e) {
+        console.log("on didRequestSampleUpdated", e);
+        if (e.updateSample) {
+          if (_this.state.waiting.length > 0) {
+            return alert("A query for sampled results is already in progress");
+          } else {
+            return _this.fetch(e.reportId);
+          }
+        }
       };
     })(this));
     return this.sizeMonitor = setInterval(this.monitorSize, 500);

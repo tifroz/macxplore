@@ -165,7 +165,7 @@ window.MongoReportParamsEditor = React.createClass({displayName: "MongoReportPar
 window.TypeSelector = React.createClass({displayName: "TypeSelector",
   render: function() {
     return React.createElement("div", null, React.createElement("div", {
-      "className": "btn-group",
+      "className": "btn-group query-options",
       "data-toggle": "buttons"
     }, this.props.types.sort().map((function(_this) {
       return function(t, i) {
@@ -212,12 +212,65 @@ window.TypeSelector = React.createClass({displayName: "TypeSelector",
   }
 });
 
+window.ModeSelector = React.createClass({displayName: "ModeSelector",
+  render: function() {
+    var mode;
+    return React.createElement("div", {
+      "className": "run-options"
+    }, React.createElement("div", {
+      "className": "btn-group",
+      "data-toggle": "buttons"
+    }, (mode = this.props.report.mode, this.props.modes.sort().map((function(_this) {
+      return function(t, i) {
+        var checked, className;
+        checked = t === mode;
+        className = "btn btn-primary btn-xs";
+        if (checked) {
+          className += " active";
+        }
+        return React.createElement("label", {
+          "key": i,
+          "className": className,
+          "onClick": _this.selectionDidChange
+        }, React.createElement("input", {
+          "type": "radio",
+          "name": "mode",
+          "autoComplete": "off",
+          "value": t,
+          "checked": checked,
+          "onChange": (function() {})
+        }), React.createElement("span", null, " ", t, " "));
+      };
+    })(this)))), React.createElement("div", {
+      "className": "updateSampleButton",
+      "onClick": this.didRequestSampleUpdate
+    }, (this.props.report.mode === "manual" ? React.createElement("div", {
+      "className": "btn btn-xs btn-danger"
+    }, "\t\t\t\t\t\t\tUpdate sample result") : void 0)));
+  },
+  didRequestSampleUpdate: function(e) {
+    e = $.Event("didRequestSampleUpdated", {
+      reportId: this.props.report._id,
+      updateSample: true
+    });
+    return $("body").trigger(e);
+  },
+  selectionDidChange: function(e) {
+    var input;
+    input = $("input", e.currentTarget)[0];
+    input.checked = true;
+    return this.props.didChange(this.props.path, input.value);
+  }
+});
+
 window.MongoReportEditor = React.createClass({displayName: "MongoReportEditor",
   render: function() {
-    var types;
+    var modes, types;
     console.log("MongoReportEditor rendering...", this.props);
     types = _.keys(this.props.report.parameters);
+    modes = ["manual", "automatic"];
     console.log("parameters", types);
+    console.log("modes ", modes);
     return React.createElement("div", null, React.createElement("div", null, React.createElement("h3", null, React.createElement(EditableDiv, {
       "initialText": this.props.report.name,
       "path": "name",
@@ -225,6 +278,11 @@ window.MongoReportEditor = React.createClass({displayName: "MongoReportEditor",
     })), React.createElement("div", null, this.props.report.database, ".", this.props.report.collection)), React.createElement(EditableDiv, {
       "initialText": this.props.report.comment,
       "path": "comment",
+      "didChange": this.props.didChange
+    }), React.createElement(ModeSelector, {
+      "report": this.props.report,
+      "modes": modes,
+      "path": "mode",
       "didChange": this.props.didChange
     }), React.createElement(TypeSelector, {
       "type": this.props.report.type,
@@ -301,7 +359,8 @@ window.ReportEditor = React.createClass({displayName: "ReportEditor",
         var e;
         _this.setState(update);
         e = $.Event("didUpdateQuery", {
-          reportId: _this.state.report._id
+          reportId: _this.state.report._id,
+          updateSample: _this.state.mode === "automatic"
         });
         return $("body").trigger(e);
       };

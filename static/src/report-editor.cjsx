@@ -113,7 +113,7 @@ window.MongoReportParamsEditor = React.createClass
 window.TypeSelector = React.createClass
 	render: ->
 		<div>
-			<div className="btn-group" data-toggle="buttons">
+			<div className="btn-group query-options" data-toggle="buttons">
 				{
 
 					@props.types.sort().map (t, i)=>
@@ -145,14 +145,51 @@ window.TypeSelector = React.createClass
 		input.checked = true
 		@props.didChange @props.path, input.value
 
+window.ModeSelector = React.createClass
+	render: ->
+		<div className="run-options">
+			<div className="btn-group" data-toggle="buttons">
+				{
+					mode = @props.report.mode
+					@props.modes.sort().map (t, i)=>
+						checked = t is mode
+						className = "btn btn-primary btn-xs"
+						if checked
+							className += " active"
+						<label key={i} className={className} onClick={@selectionDidChange}>
+							<input type="radio" name="mode" autoComplete="off" value={t} checked={checked} onChange={(->)}/>
+							<span> {t} </span>
+						</label>
 
+				}
+			</div>
+			<div className="updateSampleButton" onClick={@didRequestSampleUpdate}>
+				{
+					if @props.report.mode is "manual"
+						<div className="btn btn-xs btn-danger">
+							Update sample result
+						</div>
+				}
+			</div>
+		</div>
+
+	didRequestSampleUpdate: (e)->
+		e = $.Event( "didRequestSampleUpdated", {reportId: @props.report._id, updateSample: true} )
+		$("body").trigger e
+	
+	selectionDidChange: (e)->
+		input = $("input", e.currentTarget)[0]
+		input.checked = true
+		@props.didChange @props.path, input.value
 
 window.MongoReportEditor = React.createClass
 	
 	render: ->
 		console.log "MongoReportEditor rendering...", @props
 		types = _.keys @props.report.parameters
+		modes = ["manual", "automatic"]
 		console.log "parameters", types
+		console.log "modes ", modes
 		return <div>
 				<div>
 					<h3>
@@ -161,7 +198,9 @@ window.MongoReportEditor = React.createClass
 					<div>{@props.report.database}.{@props.report.collection}</div>
 				</div>
 				<EditableDiv initialText={@props.report.comment}  path="comment" didChange={@props.didChange}/>
+				<ModeSelector report={@props.report} modes={modes} path="mode" didChange={@props.didChange}/>
 				<TypeSelector type={@props.report.type} types={types} path="type" didChange={@props.didChange}/>
+				
 				<MongoReportParamsEditor key={@props.report.type} parameters={@props.report.parameters[@props.report.type]} path={"parameters.#{@props.report.type}"} didChange={@props.didChange}/>
 			</div>
 
@@ -199,6 +238,6 @@ window.ReportEditor = React.createClass
 
 		@ajax params, (xhr, update)=>
 			@setState update
-			e = $.Event( "didUpdateQuery", {reportId: @state.report._id} )
+			e = $.Event( "didUpdateQuery", {reportId: @state.report._id, updateSample: @state.mode is "automatic"} )
 			$("body").trigger e
 

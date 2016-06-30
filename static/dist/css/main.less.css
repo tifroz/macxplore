@@ -35,6 +35,14 @@
   overflow-y: scroll ;
   border: 1px solid #ccc ;
 }
+#editor .updateSampleButton {
+  display: inline-block;
+  margin: 10px ;
+}
+#editor .run-options {
+  display: block ;
+  margin: 10px ;
+}
 #preview {
   overflow-y: scroll ;
   border: 1px solid #ccc ;

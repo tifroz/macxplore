@@ -3,7 +3,7 @@ window.AjaxMixin =
 	ajax: (params, fn) ->
 		defaultParams =
 			cache: false
-			timeout: 20000
+			timeout: 0
 			complete: (jqXHR, textStatus)=>
 				parser = document.createElement('a');
 				parser.href = params.url

@@ -4,7 +4,7 @@ window.AjaxMixin = {
     var defaultParams, p;
     defaultParams = {
       cache: false,
-      timeout: 20000,
+      timeout: 0,
       complete: (function(_this) {
         return function(jqXHR, textStatus) {
           var boo, error, mimeType, parser, payload, update;

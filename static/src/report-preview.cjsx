@@ -108,7 +108,16 @@ window.ReportPreview = React.createClass
 			
 		$("body").on "didUpdateQuery", (e)=>
 			console.log "on didUpdateQuery", e
-			@fetch e.reportId
+			if e.updateSample
+				@fetch e.reportId
+
+		$("body").on "didRequestSampleUpdated", (e)=>
+			console.log "on didRequestSampleUpdated", e
+			if e.updateSample
+				if @state.waiting.length > 0
+					alert "A query for sampled results is already in progress"
+				else
+					@fetch e.reportId
 
 		@sizeMonitor = setInterval @monitorSize, 500
 
