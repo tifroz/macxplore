@@ -216,7 +216,13 @@ class Report extends MongoDoc
 			fn?(boo)
 
 
-
+Report.makeCopy = (original) ->
+	og = original.data()
+	data = 
+		name: "#{og.name} copy"
+	for attributeName in ["database", "collection", "comment", "type", "mode", "parameters"]
+		data[attributeName] = og[attributeName]
+	return new Report(data)
 
 Report.makeDefaultReport = (dbname, colname) ->
 	data = 

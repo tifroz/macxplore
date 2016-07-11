@@ -8,8 +8,18 @@ window.ReportMenuItem = React.createClass
 				<a onClick={@deleteItem}>
 					delete
 				</a>
+				<a onClick={@duplicateItem}>
+					duplicate
+				</a>
 			</div>
 		</div>
+
+	duplicateItem: (e)->
+		e.preventDefault()
+		params = 
+			url: "/report/duplicate/#{@props._id}"
+			method: "POST"
+		@props.ajax params
 	
 	deleteItem: (e)->
 		e.preventDefault()

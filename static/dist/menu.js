@@ -9,7 +9,18 @@ window.ReportMenuItem = React.createClass({displayName: "ReportMenuItem",
       "className": "menu-item-actions"
     }, React.createElement("a", {
       "onClick": this.deleteItem
-    }, "\t\t\t\t\tdelete")));
+    }, "\t\t\t\t\tdelete"), React.createElement("a", {
+      "onClick": this.duplicateItem
+    }, "\t\t\t\t\tduplicate")));
+  },
+  duplicateItem: function(e) {
+    var params;
+    e.preventDefault();
+    params = {
+      url: "/report/duplicate/" + this.props._id,
+      method: "POST"
+    };
+    return this.props.ajax(params);
   },
   deleteItem: function(e) {
     var params;

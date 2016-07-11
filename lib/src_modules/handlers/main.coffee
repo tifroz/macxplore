@@ -120,9 +120,18 @@ main = (app)->
 			handleError res, boo
 
 	
+	app.post "/report/duplicate/:_id", (req, res)->
+		Seq().seq ->
+			getReport req.params._id, this
+		.seq (original)->
+			r = Report.makeCopy original
+			report  = new Report(r.data(), this)
+		.seq ->
+			sendReportList(req, res)
+		.catch (boo)->
+			handleError res, boo
 
 	app.post "/report", (req, res)->
-		logger.info "handling..."
 		logger.log util.format("body: %j", req.body)
 		Seq().seq ->
 			r = Report.makeDefaultReport req.body.database, req.body.collection
@@ -131,8 +140,6 @@ main = (app)->
 			sendReportList(req, res)
 		.catch (boo)->
 			handleError res, boo
-
-	
 
 	app.delete "/report/:_id", (req, res)->
 		Seq().seq ->
