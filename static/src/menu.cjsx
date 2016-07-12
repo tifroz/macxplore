@@ -2,7 +2,7 @@ window.ReportMenuItem = React.createClass
 	render: ->
 		<div className="menu-item">
 			<a onClick={@selectItem}>
-				{@props.name}
+				{@props.report.name}
 			</a>
 			<div className="menu-item-actions">
 				<a onClick={@deleteItem}>
@@ -23,15 +23,15 @@ window.ReportMenuItem = React.createClass
 	
 	deleteItem: (e)->
 		e.preventDefault()
-		if confirm "#{@props.name} will be deleted permanently"
+		if confirm "#{@props.report.name} will be deleted permanently"
 			params = 
-				url: "/report/#{@props._id}"
+				url: "/report/#{@props.report._id}"
 				method: "DELETE"
 			@props.ajax params
 
 	selectItem: (e)->
 		e.preventDefault()
-		e = $.Event( "didSelect", reportId: @props._id, reportName: @props.name )
+		e = $.Event( "didSelect", report: @props.report )
 		$("body").trigger e
 
 
@@ -79,7 +79,7 @@ window.ReportCreate = React.createClass
 window.ReportMenuList = React.createClass
 	render: ->
 		<nav>
-			{@props.reports.map (r, i)=>(<ReportMenuItem key={r._id} _id={r._id} name={r.name} ajax={@props.ajax} /> )}
+			{@props.reports.map (r, i)=>(<ReportMenuItem key={r._id} report={r} ajax={@props.ajax} /> )}
 		</nav>
 	getDefaultProps: ->
 		props = 

@@ -5,7 +5,7 @@ window.ReportMenuItem = React.createClass({displayName: "ReportMenuItem",
       "className": "menu-item"
     }, React.createElement("a", {
       "onClick": this.selectItem
-    }, this.props.name), React.createElement("div", {
+    }, this.props.report.name), React.createElement("div", {
       "className": "menu-item-actions"
     }, React.createElement("a", {
       "onClick": this.deleteItem
@@ -25,9 +25,9 @@ window.ReportMenuItem = React.createClass({displayName: "ReportMenuItem",
   deleteItem: function(e) {
     var params;
     e.preventDefault();
-    if (confirm(this.props.name + " will be deleted permanently")) {
+    if (confirm(this.props.report.name + " will be deleted permanently")) {
       params = {
-        url: "/report/" + this.props._id,
+        url: "/report/" + this.props.report._id,
         method: "DELETE"
       };
       return this.props.ajax(params);
@@ -36,8 +36,7 @@ window.ReportMenuItem = React.createClass({displayName: "ReportMenuItem",
   selectItem: function(e) {
     e.preventDefault();
     e = $.Event("didSelect", {
-      reportId: this.props._id,
-      reportName: this.props.name
+      report: this.props.report
     });
     return $("body").trigger(e);
   }
@@ -104,8 +103,7 @@ window.ReportMenuList = React.createClass({displayName: "ReportMenuList",
       return function(r, i) {
         return React.createElement(ReportMenuItem, {
           "key": r._id,
-          "_id": r._id,
-          "name": r.name,
+          "report": r,
           "ajax": _this.props.ajax
         });
       };

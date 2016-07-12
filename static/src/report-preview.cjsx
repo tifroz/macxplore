@@ -100,16 +100,21 @@ window.ReportPreview = React.createClass
 			reportName: null
 
 	componentDidMount:->
-		$("body").on "on didSelect", (e)=>
+		$("body").on "didSelect", (e)=>
 			console.log "didSelect", e
-			@setState reportId: e.reportId
-			@setState reportName: e.reportName
-			@fetch e.reportId
+			@setState reportId: e.report._id
+			@setState reportName: e.report.name
+			if e.report.mode is "automatic"
+				@fetch e.report._id
+			else
+				@fetchSampleDoc e.report._id
 			
 		$("body").on "didUpdateQuery", (e)=>
 			console.log "on didUpdateQuery", e
 			if e.updateSample
 				@fetch e.reportId
+			else
+				@fetchSampleDoc e.reportId
 
 		$("body").on "didRequestSampleUpdated", (e)=>
 			console.log "on didRequestSampleUpdated", e
@@ -165,25 +170,30 @@ window.ReportPreview = React.createClass
 			$("body").trigger(e)
 
 	fetch: (reportId)->
-		samplePath = "/report/sampledoc/#{reportId}"
+		@fetchSampleDoc reportId
+		@fetchSampleOutput reportId
 
-		@ajax samplePath, (xhr, update)=>
-			@doneWithFetch samplePath
+
+	fetchSampleDoc: (reportId)->
+		path = "/report/sampledoc/#{reportId}"
+		@ajax path, (xhr, update)=>
+			@doneWithFetch path
 			if xhr.status > 0 and xhr.status < 400
 				console.log "xhr.responseText", doc: JSON.parse(xhr.responseText)
-				@setState doc: JSON.parse(xhr.responseText), xhr: "#{samplePath}": xhr
+				@setState doc: JSON.parse(xhr.responseText), xhr: "#{path}": xhr
 			else
-				@setState xhr: "#{samplePath}": xhr
+				@setState xhr: "#{path}": xhr	
+		@waitingForFetch [path]
 
-
-		outputPath = "/report/output/#{reportId}/__sample.csv"
-		@ajax outputPath, (xhr, update)=>
-			@doneWithFetch outputPath
+	fetchSampleOutput: (reportId)->
+		path = "/report/output/#{reportId}/__sample.csv"
+		@ajax path, (xhr, update)=>
+			@doneWithFetch path
 			if xhr.status > 0 and xhr.status < 400
-				@setState csv: xhr.responseText, xhr: "#{outputPath}": xhr
+				@setState csv: xhr.responseText, xhr: "#{path}": xhr
 			else
-				@setState xhr: "#{outputPath}": xhr
-		@waitingForFetch [samplePath, outputPath]
+				@setState xhr: "#{path}": xhr 
+		@waitingForFetch [path]
 
 	waitingForFetch: (paths)->
 		waiting = @state.waiting

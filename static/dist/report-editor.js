@@ -308,7 +308,7 @@ window.ReportEditor = React.createClass({displayName: "ReportEditor",
     $("body").on("didSelect", (function(_this) {
       return function(e) {
         console.log("didSelect", e);
-        return _this.ajax("/report/" + e.reportId);
+        return _this.ajax("/report/" + e.report._id);
       };
     })(this));
     previewPanelHeight = 0;
@@ -360,7 +360,7 @@ window.ReportEditor = React.createClass({displayName: "ReportEditor",
         _this.setState(update);
         e = $.Event("didUpdateQuery", {
           reportId: _this.state.report._id,
-          updateSample: _this.state.mode === "automatic"
+          updateSample: _this.state.report.mode === "automatic"
         });
         return $("body").trigger(e);
       };

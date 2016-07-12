@@ -213,7 +213,7 @@ window.ReportEditor = React.createClass
 	componentDidMount:->
 		$("body").on "didSelect", (e)=>
 			console.log "didSelect", e
-			@ajax "/report/#{e.reportId}"
+			@ajax "/report/#{e.report._id}"
 		previewPanelHeight = 0
 		adjustHeight = =>
 			$("#editor").height(window.innerHeight - previewPanelHeight - 100)
@@ -238,6 +238,6 @@ window.ReportEditor = React.createClass
 
 		@ajax params, (xhr, update)=>
 			@setState update
-			e = $.Event( "didUpdateQuery", {reportId: @state.report._id, updateSample: @state.mode is "automatic"} )
+			e = $.Event( "didUpdateQuery", {reportId: @state.report._id, updateSample: @state.report.mode is "automatic"} )
 			$("body").trigger e
 

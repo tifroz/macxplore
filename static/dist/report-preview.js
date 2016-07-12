@@ -134,16 +134,20 @@ window.ReportPreview = React.createClass({displayName: "ReportPreview",
     };
   },
   componentDidMount: function() {
-    $("body").on("on didSelect", (function(_this) {
+    $("body").on("didSelect", (function(_this) {
       return function(e) {
         console.log("didSelect", e);
         _this.setState({
-          reportId: e.reportId
+          reportId: e.report._id
         });
         _this.setState({
-          reportName: e.reportName
+          reportName: e.report.name
         });
-        return _this.fetch(e.reportId);
+        if (e.report.mode === "automatic") {
+          return _this.fetch(e.report._id);
+        } else {
+          return _this.fetchSampleDoc(e.report._id);
+        }
       };
     })(this));
     $("body").on("didUpdateQuery", (function(_this) {
@@ -151,6 +155,8 @@ window.ReportPreview = React.createClass({displayName: "ReportPreview",
         console.log("on didUpdateQuery", e);
         if (e.updateSample) {
           return _this.fetch(e.reportId);
+        } else {
+          return _this.fetchSampleDoc(e.reportId);
         }
       };
     })(this));
@@ -212,12 +218,16 @@ window.ReportPreview = React.createClass({displayName: "ReportPreview",
     }
   },
   fetch: function(reportId) {
-    var outputPath, samplePath;
-    samplePath = "/report/sampledoc/" + reportId;
-    this.ajax(samplePath, (function(_this) {
+    this.fetchSampleDoc(reportId);
+    return this.fetchSampleOutput(reportId);
+  },
+  fetchSampleDoc: function(reportId) {
+    var path;
+    path = "/report/sampledoc/" + reportId;
+    this.ajax(path, (function(_this) {
       return function(xhr, update) {
         var obj, obj1;
-        _this.doneWithFetch(samplePath);
+        _this.doneWithFetch(path);
         if (xhr.status > 0 && xhr.status < 400) {
           console.log("xhr.responseText", {
             doc: JSON.parse(xhr.responseText)
@@ -226,7 +236,7 @@ window.ReportPreview = React.createClass({displayName: "ReportPreview",
             doc: JSON.parse(xhr.responseText),
             xhr: (
               obj = {},
-              obj["" + samplePath] = xhr,
+              obj["" + path] = xhr,
               obj
             )
           });
@@ -234,24 +244,28 @@ window.ReportPreview = React.createClass({displayName: "ReportPreview",
           return _this.setState({
             xhr: (
               obj1 = {},
-              obj1["" + samplePath] = xhr,
+              obj1["" + path] = xhr,
               obj1
             )
           });
         }
       };
     })(this));
-    outputPath = "/report/output/" + reportId + "/__sample.csv";
-    this.ajax(outputPath, (function(_this) {
+    return this.waitingForFetch([path]);
+  },
+  fetchSampleOutput: function(reportId) {
+    var path;
+    path = "/report/output/" + reportId + "/__sample.csv";
+    this.ajax(path, (function(_this) {
       return function(xhr, update) {
         var obj, obj1;
-        _this.doneWithFetch(outputPath);
+        _this.doneWithFetch(path);
         if (xhr.status > 0 && xhr.status < 400) {
           return _this.setState({
             csv: xhr.responseText,
             xhr: (
               obj = {},
-              obj["" + outputPath] = xhr,
+              obj["" + path] = xhr,
               obj
             )
           });
@@ -259,14 +273,14 @@ window.ReportPreview = React.createClass({displayName: "ReportPreview",
           return _this.setState({
             xhr: (
               obj1 = {},
-              obj1["" + outputPath] = xhr,
+              obj1["" + path] = xhr,
               obj1
             )
           });
         }
       };
     })(this));
-    return this.waitingForFetch([samplePath, outputPath]);
+    return this.waitingForFetch([path]);
   },
   waitingForFetch: function(paths) {
     var waiting;
