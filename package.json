@@ -4,7 +4,7 @@
   },
   "name": "macxplore",
   "description": "web app for exploring data in mongo collection",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "private": false,
   "license" : "UNLICENSED",
   "main": "lib/dist/app",
@@ -19,7 +19,7 @@
     "macmodel": "0.x",
     
     "express": "^4.12.0",
-    "pug": "1.11.x",
+    "pug": "2.0.x",
 		"compression": "1.4.x",
 		"serve-static": "^1.9.x",
 		"body-parser": "1.12.x",
