@@ -171,7 +171,7 @@ getReport = (_id, fn)->
 			if report
 				fn?(null, report)
 			else
-				fn?(new Error("No report found with id #{req.params._id}"))
+				fn?(new Error("No report found with id #{_id}"))
 		.catch (boo)->
 			fn?(boo)
 

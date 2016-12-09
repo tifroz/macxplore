@@ -17,7 +17,7 @@ window.ReportMenuItem = React.createClass({displayName: "ReportMenuItem",
     var params;
     e.preventDefault();
     params = {
-      url: "/report/duplicate/" + this.props._id,
+      url: "/report/duplicate/" + this.props.report._id,
       method: "POST"
     };
     return this.props.ajax(params);

@@ -9,7 +9,7 @@ _							= require 'underscore'
 
 xpressLogger			= require 'morgan'
 xpressBodyParser	= require 'body-parser'
-xpressJade				= require 'jade'
+xpressJade				= require 'pug'
 xpressCompress		= require 'compression'
 xpressStatic			= require 'serve-static'
 
@@ -17,7 +17,7 @@ logger						= console
 
 
 app = express()
-app.set('view engine', 'jade')
+app.set('view engine', 'pug')
 app.set('views', "#{__dirname}/../../views")
 app.set('view options', { layout: true, pretty: true })
 

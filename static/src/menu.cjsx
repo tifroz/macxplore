@@ -17,7 +17,7 @@ window.ReportMenuItem = React.createClass
 	duplicateItem: (e)->
 		e.preventDefault()
 		params = 
-			url: "/report/duplicate/#{@props._id}"
+			url: "/report/duplicate/#{@props.report._id}"
 			method: "POST"
 		@props.ajax params
 	
