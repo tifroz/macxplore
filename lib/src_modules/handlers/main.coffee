@@ -8,7 +8,7 @@ helpers				= require "helpers"
 json2Csv			= helpers.streams.json2Csv
 truncate			= helpers.streams.truncate
 cursor2JsonArray	= helpers.streams.cursor2JsonArray
-cacheMiddleWare		= require("apicache").middleware
+apicache			= require("apicache")
 
 #cache = helpers.xpressCache
 
@@ -21,9 +21,9 @@ main = (app, cacheConfig)->
 
 
 	cacheMiddleWare = (req, res, next)->
-		for route in cache
+		for route in cacheConfig
 			if route.pattern.matches(req.path)
-				cacheMiddleWare(req, res, next)
+				apicache.middleware(req, res, next)
 				return
 		next()
 
