@@ -8,7 +8,7 @@ helpers				= require "helpers"
 json2Csv			= helpers.streams.json2Csv
 truncate			= helpers.streams.truncate
 cursor2JsonArray	= helpers.streams.cursor2JsonArray
-cache = require("apicache")
+cacheMiddleWare		= require("apicache").middleware
 
 #cache = helpers.xpressCache
 
@@ -17,31 +17,39 @@ handleError = (res, boo)->
 	res.send 500, util.format("%j", message: boo.message, stack: boo.stack)
 
 
-main = (app, config)->
+main = (app, cacheConfig)->
+
+
+	cacheMiddleWare = (req, res, next)->
+		for route in cache
+			if route.pattern.matches(req.path)
+				cacheMiddleWare(req, res, next)
+				return
+		next()
 
 	outputCacheTimeout = config?.outputCacheTimeout or 0
 
-	app.get "/", (req, res)->
+	app.get "/", cacheMiddleWare, (req, res)->
 		res.render("main")
 
 	
-	app.get "/sandbox", (req, res)->
+	app.get "/sandbox", cacheMiddleWare, (req, res)->
 		res.render("sandbox")
 
 	
 
-	app.get "/preview", (req, res)->
+	app.get "/preview", cacheMiddleWare, (req, res)->
 		res.render("preview")
 	
 	
 
-	app.get "/reports", sendReportList
+	app.get "/reports", cacheMiddleWare, sendReportList
 
 	
-	app.get "/report/:_id", sendReport
+	app.get "/report/:_id", cacheMiddleWare, sendReport
 
 
-	app.get "/report/output/:_id/:name", cache.middleware("1 minute"), (req, res)->
+	app.get "/report/output/:_id/:name", cacheMiddleWare, (req, res)->
 		report = new Report(_id: req.params._id)
 		Seq().seq ->
 			report.fillFromStorage this

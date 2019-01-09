@@ -13,8 +13,6 @@ xpressStatic			= require 'serve-static'
 
 logger						= console
 
-config =
-	outputCacheTimeout: 0
 
 app = express()
 app.set('view engine', 'pug')
@@ -29,11 +27,12 @@ app
 	.use(xpressBodyParser())
 
 xplore = 
-	setLogger: (l)->
-		logger = l
-	setOutputCacheTimeout: (t)->
-		config.outputCacheTimeout = t
-	start: (mongoConfig, port, fn)->
+	start: (mongoConfig, xploreConfig, fn)->
+		{port, logger, cache} = xploreConfig
+		port = port || 4280
+		logger = logger || console
+		cacheConfig = cache || []
+
 		logger.log "Modules: #{_.keys(modules)}"
 		handlers = require 'handlers'
 
@@ -46,7 +45,7 @@ xplore =
 			MongoDoc.db.initialize mongoConfig, logger, this
 		.seq ->
 			logger.log "MongoDoc.db.report #{MongoDoc.db.report}, #{MongoDoc.db.databases.xplore.report}"
-			handlers.main(app, config)
+			handlers.main(app, cacheConfig)
 			app.listen(port)
 			logger.log "Xplore server listening on port #{port}"
 			fn?(null)
