@@ -22,7 +22,7 @@ main = (app, cacheConfig)->
 
 	cacheMiddleWare = (req, res, next)->
 		for route in cacheConfig
-			if req.path.match(route.pattern)
+			if req.path.match(route.pattern) and req.method is "GET"
 				cacheMW = apicache.middleware(route.duration)
 				cacheMW(req, res, next)
 				return
@@ -33,16 +33,11 @@ main = (app, cacheConfig)->
 	app.get "/", cacheMiddleWare, (req, res)->
 		res.render("main")
 
-	
 	app.get "/sandbox", cacheMiddleWare, (req, res)->
 		res.render("sandbox")
 
-	
-
 	app.get "/preview", cacheMiddleWare, (req, res)->
 		res.render("preview")
-	
-	
 
 	app.get "/reports", cacheMiddleWare, sendReportList
 
@@ -80,27 +75,9 @@ main = (app, cacheConfig)->
 					stream.pipe(json2Csv()).pipe(res)
 		.catch (boo)->
 			handleError res, boo
-
-	
-	###
-	app.get "/report/recentdoc/:_id", (req, res)->
-		dbname = null
-		colname = null
-		report = new Report(_id: req.params._id)
-		Seq().seq ->
-			report.getTargetedCollection this
-		.seq (c)->
-			c.findOne {}, {sort:{_id: -1}}, this
-		.seq (doc)->
-			res.setHeader "Content-Type", "application/json"
-			res.send util.format("%j", doc: doc)
-		.catch (boo)->
-			handleError res, boo
-	###
-
 	
 
-	app.get "/report/sampledoc/:_id", (req, res)->
+	app.get "/report/sampledoc/:_id", cacheMiddleWare, (req, res)->
 		dbname = null
 		colname = null
 		report = new Report(_id: req.params._id)
@@ -113,7 +90,7 @@ main = (app, cacheConfig)->
 			cursor.limit(5).stream().pipe(cursor2JsonArray()).pipe(res)
 	
 
-	app.get "/:dbname/collections", (req, res)->
+	app.get "/:dbname/collections", cacheMiddleWare, (req, res)->
 		dbname = req.params.dbname
 		Seq().seq ->
 			if MongoDoc.db.databases[dbname] is undefined
