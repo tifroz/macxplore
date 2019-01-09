@@ -4,18 +4,22 @@ util					= require 'util'
 Seq						= require 'seq'
 logger				= require 'maclogger'
 MongoDoc			= require 'macmodel'
-json2Csv			= require("helpers").streams.json2Csv
-truncate			= require("helpers").streams.truncate
-cursor2JsonArray= require("helpers").streams.cursor2JsonArray
+helpers				= require "helpers"
+json2Csv			= helpers.streams.json2Csv
+truncate			= helpers.streams.truncate
+cursor2JsonArray	= helpers.streams.cursor2JsonArray
+cache = require("apicache")
 
+#cache = helpers.xpressCache
 
 handleError = (res, boo)->
 	res.setHeader "Content-Type", "application/json"
 	res.send 500, util.format("%j", message: boo.message, stack: boo.stack)
 
 
-main = (app)->
+main = (app, config)->
 
+	outputCacheTimeout = config?.outputCacheTimeout or 0
 
 	app.get "/", (req, res)->
 		res.render("main")
@@ -34,12 +38,10 @@ main = (app)->
 	app.get "/reports", sendReportList
 
 	
-
 	app.get "/report/:_id", sendReport
 
 
-
-	app.get "/report/output/:_id/:name", (req, res)->
+	app.get "/report/output/:_id/:name", cache.middleware("1 minute"), (req, res)->
 		report = new Report(_id: req.params._id)
 		Seq().seq ->
 			report.fillFromStorage this
@@ -99,7 +101,7 @@ main = (app)->
 			report.getSampleCursor this
 		.seq (cursor)->
 			res.writeHead 200, "Content-Type": "application/json"
-			cursor.limit(3).stream().pipe(cursor2JsonArray()).pipe(res)
+			cursor.limit(5).stream().pipe(cursor2JsonArray()).pipe(res)
 	
 
 	app.get "/:dbname/collections", (req, res)->

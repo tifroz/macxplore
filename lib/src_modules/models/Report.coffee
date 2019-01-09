@@ -3,7 +3,7 @@ MongoDoc			= require 'macmodel'
 events				= require 'events'
 logger				= require 'maclogger'
 Seq						= require 'seq'
-coffee				= require 'coffee-script'
+coffee				= require 'coffeescript'
 util					= require 'util'
 streamify			= require "stream-array"
 mr2FlatJson		= require("helpers").streams.mr2FlatJson
@@ -67,6 +67,7 @@ class Report extends MongoDoc
 							try
 								jscript = coffee.compile cscript, bare: true
 								logger.log "#{p} jscript: #{jscript}"
+								evaluated = undefined
 								eval "evaluated = #{jscript}"
 							catch err
 								err.message = "Error compiling #{p}: #{err.message}"

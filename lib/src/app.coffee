@@ -1,7 +1,5 @@
 modules	= require 'modules'
 
-
-
 express				= require 'express'
 MongoDoc			= require 'macmodel'
 Seq 					= require 'seq'
@@ -15,6 +13,8 @@ xpressStatic			= require 'serve-static'
 
 logger						= console
 
+config =
+	outputCacheTimeout: 0
 
 app = express()
 app.set('view engine', 'pug')
@@ -31,7 +31,8 @@ app
 xplore = 
 	setLogger: (l)->
 		logger = l
-
+	setOutputCacheTimeout: (t)->
+		config.outputCacheTimeout = t
 	start: (mongoConfig, port, fn)->
 		logger.log "Modules: #{_.keys(modules)}"
 		handlers = require 'handlers'
@@ -45,7 +46,7 @@ xplore =
 			MongoDoc.db.initialize mongoConfig, logger, this
 		.seq ->
 			logger.log "MongoDoc.db.report #{MongoDoc.db.report}, #{MongoDoc.db.databases.xplore.report}"
-			handlers.main(app)
+			handlers.main(app, config)
 			app.listen(port)
 			logger.log "Xplore server listening on port #{port}"
 			fn?(null)

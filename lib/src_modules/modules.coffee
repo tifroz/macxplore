@@ -1,7 +1,7 @@
 ###*
 * Modules dependencies
 ###
-sys = require('sys'); fs = require('fs'); _ = require('underscore'); path = require('path')
+fs = require('fs'); _ = require('underscore'); path = require('path')
 
 jsInclude=/(^[^\.].*)\.js/; jsExclude=/index.js|.*skip.js/ ; dirInclude=/^[^\.].*/; dirExclude=/\..*/
 

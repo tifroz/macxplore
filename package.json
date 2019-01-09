@@ -4,29 +4,27 @@
   },
   "name": "macxplore",
   "description": "web app for exploring data in mongo collection",
-  "version": "0.1.8",
+  "version": "0.1.15",
   "private": false,
-  "license" : "UNLICENSED",
+  "license": "UNLICENSED",
   "main": "lib/dist/app",
   "dependencies": {
-  	"commander": "2.x",
-
-  	"underscore": "1.7.x",
-    "seq": "0.3.x",
-    
+    "body-parser": "1.12.x",
+    "coffeescript": "^1.10.0",
+    "commander": "^2.19.0",
+    "compression": "1.4.x",
+    "express": "^4.16.4",
     "maclogger": "0.x",
-    "macmongo": "0.x",
-    "macmodel": "0.x",
-    
-    "express": "^4.12.0",
+    "macmodel": ">=0.0.9",
+    "macmongo": ">=0.0.16",
+    "memory-cache": "0.2.x",
+    "morgan": "1.5.x",
     "pug": ">=2.0.0-beta6",
-		"compression": "1.4.x",
-		"serve-static": "^1.9.x",
-		"body-parser": "1.12.x",
-		"morgan": "1.5.x",
-		"through": "2.3.8",
-		"stream-array": "1.1.x",
-		"coffee-script": "1.10.x"
+    "seq": "0.3.x",
+    "serve-static": "^1.13.2",
+    "stream-array": "^1.1.2",
+    "through": "2.3.8",
+    "underscore": "1.7.x"
   },
   "devDependencies": {}
 }
