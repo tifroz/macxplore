@@ -22,7 +22,7 @@ main = (app, cacheConfig)->
 
 	cacheMiddleWare = (req, res, next)->
 		for route in cacheConfig
-			if route.pattern.matches(req.path)
+			if req.path.match(route.pattern)
 				apicache.middleware(req, res, next)
 				return
 		next()
