@@ -18,6 +18,7 @@
     "macmodel": ">=0.0.9",
     "macmongo": ">=0.0.16",
     "memory-cache": "0.2.x",
+    "apicache": "1.2.x",
     "morgan": "1.5.x",
     "pug": ">=2.0.0-beta6",
     "seq": "0.3.x",
