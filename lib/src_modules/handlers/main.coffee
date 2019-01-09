@@ -23,7 +23,8 @@ main = (app, cacheConfig)->
 	cacheMiddleWare = (req, res, next)->
 		for route in cacheConfig
 			if req.path.match(route.pattern)
-				apicache.middleware(req, res, next)
+				cacheMW = apicache.middleware(route.duration)
+				cacheMW(req, res, next)
 				return
 		next()
 
