@@ -145,7 +145,7 @@ window.ReportPreview = React.createClass
 							<a href={"/report/output/"+@state.reportId+"/"+@state.reportName+".csv"} target="_blank">csv file</a>
 						</div>
 						<div className={activityClasses}>
-							<img src="http://getsetgames.com/wp-content/uploads/2009/12/ActivityIndicator.gif"/>
+							<img src="http://https://swishly.nyc3.cdn.digitaloceanspaces.com/static/assets/webtv/app/gif-load.gif"/>
 						</div>
 						{
 							if @state.type is "sample doc"

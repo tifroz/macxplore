@@ -194,7 +194,7 @@ window.ReportPreview = React.createClass({displayName: "ReportPreview",
     }, "csv file")), React.createElement("div", {
       "className": activityClasses
     }, React.createElement("img", {
-      "src": "http://getsetgames.com/wp-content/uploads/2009/12/ActivityIndicator.gif"
+      "src": "http://https://swishly.nyc3.cdn.digitaloceanspaces.com/static/assets/webtv/app/gif-load.gif"
     })), (this.state.type === "sample doc" ? React.createElement(JsonViewer, {
       "doc": this.state.doc
     }) : this.state.type === "sample result" ? React.createElement(CSVTable, {
