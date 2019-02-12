@@ -8,6 +8,9 @@
   "private": false,
   "license": "UNLICENSED",
   "main": "lib/dist/app",
+  "comments": {
+    "macmongo-dependencies": "use  '>=0.0.16' or 'tifroz/macmongo' to fetch latest from github"
+  },
   "dependencies": {
     "body-parser": "1.12.x",
     "coffeescript": "^1.10.0",
@@ -16,7 +19,7 @@
     "express": "^4.16.4",
     "maclogger": "0.x",
     "macmodel": ">=0.0.9",
-    "macmongo": ">=0.0.16",
+    "macmongo": "tifroz/macmongo",
     "memory-cache": "0.2.x",
     "apicache": "1.2.x",
     "morgan": "1.5.x",
