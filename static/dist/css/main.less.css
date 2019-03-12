@@ -18,11 +18,18 @@
   font-size: 0.9em ;
   color: #666 ;
 }
-.menu-item .menu-item-actions {
+.menu-item .menu-item-details {
   visibility: hidden ;
   font-size: 8px ;
+  color: #444;
 }
-.menu-item:hover .menu-item-actions {
+.menu-item .menu-item-details div {
+  display: inline-box;
+}
+.menu-item .menu-item-info {
+  font-size: 8px ;
+}
+.menu-item:hover .menu-item-details {
   visibility: visible ;
 }
 .resizable {

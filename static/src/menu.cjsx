@@ -4,13 +4,30 @@ window.ReportMenuItem = React.createClass
 			<a onClick={@selectItem}>
 				{@props.report.name}
 			</a>
-			<div className="menu-item-actions">
-				<a onClick={@deleteItem}>
-					delete
-				</a>
-				<a onClick={@duplicateItem}>
-					duplicate
-				</a>
+			<div className="menu-item-details">
+				<div>
+					<span>
+						{@props.report.database}
+					</span>
+					.
+					<span>
+						{@props.report.collection}
+					</span>
+				</div>
+				<div class="dropdown">
+					<button id="dLabel" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+						Action
+						<span class="caret"></span>
+					</button>
+					<ul class="dropdown-menu" aria-labelledby="dLabel">
+						<li>
+							<a onClick={@deleteItem}>delete</a>
+						</li>
+						<li>
+							<a onClick={@duplicateItem}>duplicate</a>
+						</li>
+					</ul>
+				</div>
 			</div>
 		</div>
 
