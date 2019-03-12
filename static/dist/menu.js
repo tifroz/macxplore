@@ -8,17 +8,17 @@ window.ReportMenuItem = React.createClass({displayName: "ReportMenuItem",
     }, this.props.report.name), React.createElement("div", {
       "className": "menu-item-details"
     }, React.createElement("div", null, React.createElement("span", null, this.props.report.database), React.createElement("span", null, "."), React.createElement("span", null, this.props.report.collection)), React.createElement("div", {
-      "class": "dropdown"
+      "className": "dropdown"
     }, React.createElement("button", {
       "id": "dLabel",
       "type": "button",
       "data-toggle": "dropdown",
       "aria-haspopup": "true",
       "aria-expanded": "false"
-    }, "\t\t\t\t\t\tAction", React.createElement("span", {
+    }, "\t\t\t\t\t\tActions", React.createElement("span", {
       "class": "caret"
     })), React.createElement("ul", {
-      "class": "dropdown-menu",
+      "className": "dropdown-menu",
       "aria-labelledby": "dLabel"
     }, React.createElement("li", null, React.createElement("a", {
       "onClick": this.deleteItem

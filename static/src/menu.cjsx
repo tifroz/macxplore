@@ -14,12 +14,12 @@ window.ReportMenuItem = React.createClass
 						{@props.report.collection}
 					</span>
 				</div>
-				<div class="dropdown">
+				<div className="dropdown">
 					<button id="dLabel" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-						Action
+						Actions
 						<span class="caret"></span>
 					</button>
-					<ul class="dropdown-menu" aria-labelledby="dLabel">
+					<ul className="dropdown-menu" aria-labelledby="dLabel">
 						<li>
 							<a onClick={@deleteItem}>delete</a>
 						</li>
