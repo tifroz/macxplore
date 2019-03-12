@@ -7,7 +7,7 @@ window.ReportMenuItem = React.createClass({displayName: "ReportMenuItem",
       "onClick": this.selectItem
     }, this.props.report.name), React.createElement("div", {
       "className": "menu-item-details"
-    }, React.createElement("div", null, React.createElement("span", null, this.props.report.database), "\t\t\t\t\t.", React.createElement("span", null, this.props.report.collection)), React.createElement("div", {
+    }, React.createElement("div", null, React.createElement("span", null, this.props.report.database), React.createElement("span", null, "."), React.createElement("span", null, this.props.report.collection)), React.createElement("div", {
       "class": "dropdown"
     }, React.createElement("button", {
       "id": "dLabel",

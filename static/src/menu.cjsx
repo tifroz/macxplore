@@ -9,7 +9,7 @@ window.ReportMenuItem = React.createClass
 					<span>
 						{@props.report.database}
 					</span>
-					.
+					<span>.</span>
 					<span>
 						{@props.report.collection}
 					</span>
