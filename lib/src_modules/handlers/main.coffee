@@ -178,7 +178,7 @@ sendReport = (req, res)->
 sendReportList = (req, res)->
 		Seq().seq ->
 			logger.info util.format("Report.resolveCollection: #{Report.resolveCollection()}")
-			Report.fetch {}, {sort: {name: -1}, fields: ["_id", "name", "comments"]}, this
+			Report.fetch {}, {sort: {name: -1}, fields: ["_id", "name", "comments", "collection", "database"]}, this
 		.seq (reports)->
 			logger.info "db\n#{_.keys(MongoDoc.db)}"
 			payload =
