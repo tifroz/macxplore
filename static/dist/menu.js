@@ -9,10 +9,11 @@ window.ReportMenuItem = React.createClass({displayName: "ReportMenuItem",
       "className": "menu-item-details"
     }, React.createElement("div", null, React.createElement("span", null, this.props.report.database), React.createElement("span", null, "."), React.createElement("span", null, this.props.report.collection)), React.createElement("div", {
       "className": "dropdown"
-    }, React.createElement("button", {
+    }, React.createElement("a", {
       "id": "dLabel",
-      "type": "button",
+      "data-target": "#",
       "data-toggle": "dropdown",
+      "role": "button",
       "aria-haspopup": "true",
       "aria-expanded": "false"
     }, "\t\t\t\t\t\tActions", React.createElement("span", {

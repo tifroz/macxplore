@@ -18,13 +18,16 @@
   font-size: 0.9em ;
   color: #666 ;
 }
+.menu-item {
+  padding-bottom: 5px;
+}
 .menu-item .menu-item-details {
   visibility: hidden ;
   font-size: 8px ;
   color: #444;
 }
 .menu-item .menu-item-details div {
-  display: inline-box;
+  display: inline-block;
 }
 .menu-item .menu-item-info {
   font-size: 8px ;
@@ -49,6 +52,12 @@
 #editor .run-options {
   display: block ;
   margin: 10px ;
+}
+#editor .description {
+  display: table-row;
+}
+#editor .description div {
+  display: table-cell;
 }
 #preview {
   overflow-y: scroll ;

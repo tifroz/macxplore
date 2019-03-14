@@ -271,25 +271,43 @@ window.MongoReportEditor = React.createClass({displayName: "MongoReportEditor",
     modes = ["manual", "automatic"];
     console.log("parameters", types);
     console.log("modes ", modes);
-    return React.createElement("div", null, React.createElement("div", null, React.createElement("h3", null, React.createElement(EditableDiv, {
+    React.createElement("div", {
+      "className": "description"
+    }, React.createElement("div", null, React.createElement("h4", null, React.createElement(EditableDiv, {
       "initialText": this.props.report.name,
       "path": "name",
       "didChange": this.props.didChange
-    })), React.createElement("div", null, this.props.report.database, ".", this.props.report.collection)), React.createElement(EditableDiv, {
+    })), React.createElement("div", {
+      "style": {
+        display: "inline-block; color: #444"
+      }
+    }, this.props.report.database, ".", this.props.report.collection), React.createElement("div", {
+      "style": {
+        display: "inline-block; margin-left: 20px"
+      }
+    }, React.createElement(EditableDiv, {
+      "initialText": this.props.report.tags.join(", "),
+      "path": "tags",
+      "didChange": this.props.stringArrayDidChange
+    }))), React.createElement("div", null, React.createElement(EditableDiv, {
       "initialText": this.props.report.comment,
       "path": "comment",
       "didChange": this.props.didChange
-    }), React.createElement(ModeSelector, {
+    })));
+    React.createElement("div", {
+      "className": "description"
+    }, React.createElement("div", null, React.createElement(ModeSelector, {
       "report": this.props.report,
       "modes": modes,
       "path": "mode",
       "didChange": this.props.didChange
-    }), React.createElement(TypeSelector, {
+    })), React.createElement("div", null, React.createElement(TypeSelector, {
       "type": this.props.report.type,
       "types": types,
       "path": "type",
       "didChange": this.props.didChange
-    }), React.createElement(MongoReportParamsEditor, {
+    })));
+    return React.createElement("div", null, React.createElement(MongoReportParamsEditor, {
       "key": this.props.report.type,
       "parameters": this.props.report.parameters[this.props.report.type],
       "path": "parameters." + this.props.report.type,

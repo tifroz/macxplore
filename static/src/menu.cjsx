@@ -15,10 +15,10 @@ window.ReportMenuItem = React.createClass
 					</span>
 				</div>
 				<div className="dropdown">
-					<button id="dLabel" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+					<a id="dLabel" data-target="#" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
 						Actions
 						<span class="caret"></span>
-					</button>
+					</a>
 					<ul className="dropdown-menu" aria-labelledby="dLabel">
 						<li>
 							<a onClick={@deleteItem}>delete</a>

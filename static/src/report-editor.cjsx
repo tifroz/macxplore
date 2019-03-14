@@ -190,19 +190,33 @@ window.MongoReportEditor = React.createClass
 		modes = ["manual", "automatic"]
 		console.log "parameters", types
 		console.log "modes ", modes
-		return <div>
-				<div>
-					<h3>
-						<EditableDiv initialText={@props.report.name} path="name" didChange={@props.didChange}/>
-					</h3>
-					<div>{@props.report.database}.{@props.report.collection}</div>
+		
+		<div className="description">
+			<div>
+				<h4>
+					<EditableDiv initialText={@props.report.name} path="name" didChange={@props.didChange}/>
+				</h4>
+				<div style={{display: "inline-block; color: #444"}}>{@props.report.database}.{@props.report.collection}</div>
+				<div style={{display: "inline-block; margin-left: 20px"}}>
+					<EditableDiv initialText={@props.report.tags.join(", ")} path="tags" didChange={@props.stringArrayDidChange}/>
 				</div>
-				<EditableDiv initialText={@props.report.comment}  path="comment" didChange={@props.didChange}/>
-				<ModeSelector report={@props.report} modes={modes} path="mode" didChange={@props.didChange}/>
-				<TypeSelector type={@props.report.type} types={types} path="type" didChange={@props.didChange}/>
-				
-				<MongoReportParamsEditor key={@props.report.type} parameters={@props.report.parameters[@props.report.type]} path={"parameters.#{@props.report.type}"} didChange={@props.didChange}/>
 			</div>
+			<div>
+				<EditableDiv initialText={@props.report.comment}  path="comment" didChange={@props.didChange}/>
+			</div>
+		</div>
+		<div className="description">
+			<div>
+				<ModeSelector report={@props.report} modes={modes} path="mode" didChange={@props.didChange}/>
+			</div>
+			<div>
+				<TypeSelector type={@props.report.type} types={types} path="type" didChange={@props.didChange}/>
+			</div>
+		</div>
+
+		<div>
+			<MongoReportParamsEditor key={@props.report.type} parameters={@props.report.parameters[@props.report.type]} path={"parameters.#{@props.report.type}"} didChange={@props.didChange}/>
+		</div>
 
 
 

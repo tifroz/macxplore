@@ -162,6 +162,11 @@ window.ReportPreview = React.createClass
 	didChange: (path, value)->
 		console.log "ok Changed #{path}, #{value}"
 		@setState type: value
+	
+	stringArrayDidChange: (path, value)->
+		console.log "ok Changed #{path}, #{value}"
+		values = value.split(",").map( (v)->v.trim() )
+		@setState type: values
 
 	monitorSize: ->
 		if (h = $("#preview").height()) isnt @height

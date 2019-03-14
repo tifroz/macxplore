@@ -19,7 +19,7 @@
     "express": "^4.16.4",
     "maclogger": "0.x",
     "macmodel": ">=0.0.9",
-    "macmongo": "tifroz/macmongo#a37eb49",
+    "macmongo": "tifroz/macmongo",
     "memory-cache": "0.2.x",
     "apicache": "1.2.x",
     "morgan": "1.5.x",

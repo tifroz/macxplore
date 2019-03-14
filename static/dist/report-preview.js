@@ -207,6 +207,16 @@ window.ReportPreview = React.createClass({displayName: "ReportPreview",
       type: value
     });
   },
+  stringArrayDidChange: function(path, value) {
+    var values;
+    console.log("ok Changed " + path + ", " + value);
+    values = value.split(",").map(function(v) {
+      return v.trim();
+    });
+    return this.setState({
+      type: values
+    });
+  },
   monitorSize: function() {
     var e, h;
     if ((h = $("#preview").height()) !== this.height) {

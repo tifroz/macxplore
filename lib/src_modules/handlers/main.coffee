@@ -148,6 +148,18 @@ main = (app, cacheConfig)->
 			sendReport(req, res)
 		.catch (boo)->
 			handleError res, boo
+	
+	app.get "/reports/refactor", (req, res)->
+		Seq().seq ->
+			Report.fetch {}, this
+		.flatten()
+		.seqEach (report)->
+			report.update $set: {tags: []}, this
+		.unflatten()
+		.seq (list) ->
+			res.send("OK updated #{list.length} records")
+		.catch (boo)->
+			handleError res, boo
 		
 
 getReport = (_id, fn)->
