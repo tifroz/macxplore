@@ -119,7 +119,7 @@ main = (app, cacheConfig)->
 			handleError res, boo
 
 	app.post "/report", (req, res)->
-		logger.log util.format("body: %j", req.body)
+		logger.debug util.format("body: %j", req.body)
 		Seq().seq ->
 			r = Report.makeDefaultReport req.body.database, req.body.collection
 			report  = new Report(r.data(), this)
@@ -162,10 +162,10 @@ main = (app, cacheConfig)->
 
 getReport = (_id, fn)->
 		Seq().seq ->
-			logger.log "fetching report #{_id}"
+			logger.debug "fetching report #{_id}"
 			Report.fetchOne {_id: _id}, this
 		.seq (report)->
-			logger.log "fetched report #{_id}"
+			logger.debug "fetched report #{_id}"
 			if report
 				fn?(null, report)
 			else
@@ -176,10 +176,10 @@ getReport = (_id, fn)->
 
 sendReport = (req, res)->
 		Seq().seq ->
-			logger.log "getting report"
+			logger.debug "getting report"
 			getReport req.params._id, this
 		.seq (report)->
-			logger.log "sending report"
+			logger.debug "sending report"
 			res.setHeader "Content-Type", "application/json"
 			res.send util.format("%j", report: report.data())
 		.catch (boo)->

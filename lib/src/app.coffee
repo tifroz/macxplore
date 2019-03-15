@@ -34,7 +34,7 @@ xplore =
 		logger = logger || console
 		cacheConfig = cache || []
 
-		logger.log "Modules: #{_.keys(modules)}"
+		logger.debug "Modules: #{_.keys(modules)}"
 		handlers = require 'handlers'
 
 		if mongoConfig.databases is undefined
@@ -45,7 +45,7 @@ xplore =
 		Seq().seq ->
 			MongoDoc.db.initialize mongoConfig, logger, this
 		.seq ->
-			logger.log "MongoDoc.db.report #{MongoDoc.db.report}, #{MongoDoc.db.databases.xplore.report}"
+			logger.debug "MongoDoc.db.report #{MongoDoc.db.report}, #{MongoDoc.db.databases.xplore.report}"
 			handlers.main(app, cacheConfig)
 			app.listen(port)
 			logger.info "Xplore server listening on port #{port}"

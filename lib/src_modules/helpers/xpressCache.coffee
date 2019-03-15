@@ -20,18 +20,18 @@ cache =
       key = '__express__' + req.originalUrl or req.url
       cachedBody = mcache.get(key)
       if cachedBody
-        #logger.log "OK responding with cached entry from '#{key}'"
+        #logger.debug "OK responding with cached entry from '#{key}'"
         res.send cachedBody
         return
       else
         res.sendResponse = res.send
 
         res.send = (body) ->
-          #logger.log "OK storing cached value for '#{key}'"
+          #logger.debug "OK storing cached value for '#{key}'"
           mcache.put key, body, duration * 1000
           res.sendResponse body
           return
-        #logger.log "OK no cache entry for '#{key}', will process"
+        #logger.debug "OK no cache entry for '#{key}', will process"
         next()
       return
   

@@ -13,7 +13,7 @@ valueForKeyPath = (obj, keyPath)->
 		unless _.isObject value
 			break
 
-	logger.log "valueForKeyPath, for #{keyPath}=#{value}"
+	logger.debug "valueForKeyPath, for #{keyPath}=#{value}"
 	return value
 
 csvEscape = (any)->
@@ -33,7 +33,7 @@ csvEscape = (any)->
 cursor2JsonArray = ->
 	first = true
 	write = (data)->
-		logger.log util.format("cursor2JsonArray data: %j", data)
+		logger.debug util.format("cursor2JsonArray data: %j", data)
 		if first
 			first = false
 			@queue( "[\n" )
@@ -61,28 +61,28 @@ jsonToCsv = ->
 	cols = []
 	
 	write = (data)->
-		logger.log util.format("jsonToCsv data: %j", data)
+		logger.debug util.format("jsonToCsv data: %j", data)
 		if first
 			first = false
 			cols = _.keys data
 			for index in [(cols.length-1)..0]
 				key = cols[index]
 				obj = data[key]
-				logger.log util.format("For key #{key}, isObject #{_.isObject(obj)}, %j", obj)
+				logger.debug util.format("For key #{key}, isObject #{_.isObject(obj)}, %j", obj)
 				if _.isObject obj# and not _.isFunction obj and not _.isArray obj
-					logger.log "For key #{key}, sub-Keys #{_.keys(obj)}"
+					logger.debug "For key #{key}, sub-Keys #{_.keys(obj)}"
 					subKeys = ( "#{key}.#{subkey}" for subkey in _.keys(obj) )
-					logger.log "For key #{key}, subKeys #{subKeys}"
+					logger.debug "For key #{key}, subKeys #{subKeys}"
 					cols.splice index, 1, subKeys
 			cols = _.flatten cols
-			logger.log "json2Csv columns: #{cols}"
+			logger.debug "json2Csv columns: #{cols}"
 			@queue( cols.join(",")+"\n" )
 
 		row = (csvEscape(valueForKeyPath(data, key)) for key in cols)
 		@queue( row.join(",")+"\n" )
 	
 	end = (data)->
-		logger.log util.format("jsonToCsv done")
+		logger.debug util.format("jsonToCsv done")
 		@queue null
 
 	stream = through( write, end )

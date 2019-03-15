@@ -25,17 +25,17 @@ class Report extends MongoDoc
 		colname = null
 		self = @
 		Seq().seq ->
-			logger.log "getTargetedCollection will fillFromStorage"
+			logger.debug "getTargetedCollection will fillFromStorage"
 			self.fillFromStorage this
 		.seq (r)->
-			logger.log "getTargetedCollection will linkDatabaseIfExists"
+			logger.debug "getTargetedCollection will linkDatabaseIfExists"
 			data = r.data()
 			dbname = data.database
 			colname = data.collection
 			report = r
 			MongoDoc.db.linkDatabaseIfExists dbname, this
 		.seq ->
-			logger.log "getTargetedCollection will return collection"
+			logger.debug "getTargetedCollection will return collection"
 			if collection = MongoDoc.db.databases[dbname]?.collections[colname]
 				fn?(null, collection)
 			else
@@ -66,7 +66,7 @@ class Report extends MongoDoc
 						if cscript.length > 0
 							try
 								jscript = coffee.compile cscript, bare: true
-								logger.log "#{p} jscript: #{jscript}"
+								logger.debug "#{p} jscript: #{jscript}"
 								evaluated = undefined
 								eval "evaluated = #{jscript}"
 							catch err
@@ -135,7 +135,7 @@ class Report extends MongoDoc
 					return fn?(new Error("getCursor() can't be used with queries of type '#{qType}'"))
 			if selector is undefined or selector is null
 				selector = {}
-			logger.log util.format("SampleCursor with selector %j\nand options %j", selector, options)
+			logger.debug util.format("SampleCursor with selector %j\nand options %j", selector, options)
 			cursor = c.find(selector, options)
 			fn?(null, cursor)
 		.catch (boo)->
@@ -167,10 +167,10 @@ class Report extends MongoDoc
 	getStream: (fn)->
 		self = @
 		Seq().seq ->
-			logger.log util.format("Will get targeted collection")
+			logger.debug util.format("Will get targeted collection")
 			self.getTargetedCollection this
 		.seq (c)->
-			logger.log util.format("OK have targeted collection")
+			logger.debug util.format("OK have targeted collection")
 			qType = self.data().type
 			try
 				params = self.getParsedParameters(qType)
@@ -185,7 +185,7 @@ class Report extends MongoDoc
 						else
 							fn?(null, streamify(list))
 				when "mapReduce"
-					logger.log util.format("mapReduce with map #{params.map}, reduce: #{params.reduce}, options keys: #{_.keys(params.options)}, options: %j", params.options)
+					logger.debug util.format("mapReduce with map #{params.map}, reduce: #{params.reduce}, options keys: #{_.keys(params.options)}, options: %j", params.options)
 					c.mapReduce params.map, params.reduce, params.options, (err, list)->
 						if err
 							fn?(err)
@@ -202,10 +202,10 @@ class Report extends MongoDoc
 								kv[key] = value
 								return kv
 							json = (makeKVJson(params.key,v) for v in list)
-							#logger.log util.format("Distinct: %j", json)
+							#logger.debug util.format("Distinct: %j", json)
 							fn?(null, streamify(json))
 				when "count"
-					logger.log util.format("count with query %j", params.query)
+					logger.debug util.format("count with query %j", params.query)
 					c.count params.query, {}, (err, count)->
 						if err
 							fn?(err)
