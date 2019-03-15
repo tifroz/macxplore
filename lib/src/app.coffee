@@ -28,7 +28,7 @@ app
 
 xplore = 
 	start: (mongoConfig, xploreConfig, fn)->
-		logger.info "starting xplore"
+		logger.info "Will start Xplore"
 		{port, logger, cache} = xploreConfig
 		port = port || 4280
 		logger = logger || console
@@ -45,7 +45,7 @@ xplore =
 		Seq().seq ->
 			MongoDoc.db.initialize mongoConfig, logger, this
 		.seq ->
-			logger.debug "MongoDoc.db.report #{MongoDoc.db.report}, #{MongoDoc.db.databases.xplore.report}"
+			logger.debug "Xplore will use MongoDoc.db.report #{MongoDoc.db.report}"
 			handlers.main(app, cacheConfig)
 			app.listen(port)
 			logger.info "Xplore server listening on port #{port}"
