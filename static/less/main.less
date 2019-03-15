@@ -1,9 +1,10 @@
+
 .ace-editor-wrapper {
 	position: relative ;
 }
 
 .ace-editor {
-	position: absolute;
+  position: absolute;
   top: 0;
   right: 0;
   bottom: 0;
@@ -21,26 +22,45 @@
 	}
 }
 
-.menu-item {
-	padding-bottom: 5px;
-	.menu-item-details {
-		visibility: hidden ;
-		font-size: 8px ;
-		color: #444;
-		div {
-			display: inline-block;
+#navigation {
+	.menu-item {
+		.menu-item-header {
+			div {
+				display: inline-block;
+			}
+		}
+		.menu-item-details {
+			visibility: hidden ;
+			font-size: 8px ;
+			color: #444;
+		}
+		.menu-item-info {
+			font-size: 8px ;
 		}
 	}
-	.menu-item-info {
-		font-size: 8px ;
+	
+	.menu-item:hover {
+		.menu-item-details {
+			visibility: visible ;
+		}
+	}
+	#tagList {
+		background-color: #f4f4f4;
+		margin-top: 15px;
+		margin-bottom: 15px;
+		span {
+			display: inline-block;
+			margin-left: 8px;
+			font-size: 10px ;
+			color: #448 ;
+		}
+		span.selected {
+			font-weight: bold;
+			font-size: 12px;
+		}
 	}
 }
 
-.menu-item:hover {
-	.menu-item-details {
-		visibility: visible ;
-	}
-}
 
 .resizable {
   width: 100%;
@@ -60,7 +80,7 @@
 		display: block ;
 		margin: 10px ;
 	}
-	.description {
+	.queryControls {
 		display: table-row;
 		div {
 			display: table-cell;

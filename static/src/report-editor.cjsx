@@ -145,6 +145,7 @@ window.TypeSelector = React.createClass
 		input.checked = true
 		@props.didChange @props.path, input.value
 
+
 window.ModeSelector = React.createClass
 	render: ->
 		<div className="run-options">
@@ -163,7 +164,7 @@ window.ModeSelector = React.createClass
 
 				}
 			</div>
-			<div className="updateSampleButton" onClick={@didRequestSampleUpdate}>
+			<div className="updateSampleButton btn-group" onClick={@didRequestSampleUpdate}>
 				{
 					if @props.report.mode is "manual"
 						<div className="btn btn-xs btn-danger">
@@ -182,40 +183,49 @@ window.ModeSelector = React.createClass
 		input.checked = true
 		@props.didChange @props.path, input.value
 
+
 window.MongoReportEditor = React.createClass
+	tagsDidChange: (path, value)->
+		console.log "OK Changed #{path}, #{value}"
+		values = value.split(" ").map( (v)->v.trim() )
+		for mustHave in [@props.report.database, @props.report.collection]
+			if mustHave not in values
+				values.unshift mustHave
+		@setState tags: values
+		@props.didChange "tags", values
 	
 	render: ->
 		console.log "MongoReportEditor rendering...", @props
 		types = _.keys @props.report.parameters
 		modes = ["manual", "automatic"]
+		tagsStr = @props.report.tags.join(" ") or "no tags"
 		console.log "parameters", types
 		console.log "modes ", modes
 		
-		<div className="description">
+		<div>
 			<div>
-				<h4>
+				<h4 style={{display: "inline-block", marginBottom: "2px"}}>
 					<EditableDiv initialText={@props.report.name} path="name" didChange={@props.didChange}/>
 				</h4>
-				<div style={{display: "inline-block; color: #444"}}>{@props.report.database}.{@props.report.collection}</div>
-				<div style={{display: "inline-block; margin-left: 20px"}}>
-					<EditableDiv initialText={@props.report.tags.join(", ")} path="tags" didChange={@props.stringArrayDidChange}/>
+				<div style={{display: "inline-block", color: "#666", marginLeft: "15px"}}>
+					<EditableDiv initialText={@props.report.comment}  path="comment" didChange={@props.didChange}/>
+				</div>
+				<div style={{display: "inline-block", color: "#666", fontFamily: "Heiti SC", marginLeft: "15px", fontSize: "11px", backgroundColor: "#F8F8F8"}}>
+					<EditableDiv initialText={tagsStr} path="tags" didChange={@tagsDidChange}/>
+				</div>
+			</div>
+			<hr/>
+			<div className="queryControls">
+				<div>
+					<TypeSelector type={@props.report.type} types={types} path="type" didChange={@props.didChange}/>
+				</div>
+				<div style={{paddingLeft: "50px"}}>
+					<ModeSelector report={@props.report} modes={modes} path="mode" didChange={@props.didChange}/>
 				</div>
 			</div>
 			<div>
-				<EditableDiv initialText={@props.report.comment}  path="comment" didChange={@props.didChange}/>
+				<MongoReportParamsEditor key={@props.report.type} parameters={@props.report.parameters[@props.report.type]} path={"parameters.#{@props.report.type}"} didChange={@props.didChange}/>
 			</div>
-		</div>
-		<div className="description">
-			<div>
-				<ModeSelector report={@props.report} modes={modes} path="mode" didChange={@props.didChange}/>
-			</div>
-			<div>
-				<TypeSelector type={@props.report.type} types={types} path="type" didChange={@props.didChange}/>
-			</div>
-		</div>
-
-		<div>
-			<MongoReportParamsEditor key={@props.report.type} parameters={@props.report.parameters[@props.report.type]} path={"parameters.#{@props.report.type}"} didChange={@props.didChange}/>
 		</div>
 
 
@@ -227,7 +237,8 @@ window.ReportEditor = React.createClass
 	componentDidMount:->
 		$("body").on "didSelect", (e)=>
 			console.log "didSelect", e
-			@ajax "/report/#{e.report._id}"
+			if e.report
+				@ajax "/report/#{e.report._id}"
 		previewPanelHeight = 0
 		adjustHeight = =>
 			$("#editor").height(window.innerHeight - previewPanelHeight - 100)
@@ -252,6 +263,10 @@ window.ReportEditor = React.createClass
 
 		@ajax params, (xhr, update)=>
 			@setState update
-			e = $.Event( "didUpdateQuery", {reportId: @state.report._id, updateSample: @state.report.mode is "automatic"} )
+			params = 
+				reportId: @state.report._id,
+				shouldUpdatePreview: @state.report.mode is "automatic"
+				path: path
+			e = $.Event( "didUpdateQuery", params )
 			$("body").trigger e
 

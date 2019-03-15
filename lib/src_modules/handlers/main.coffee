@@ -40,7 +40,6 @@ main = (app, cacheConfig)->
 		res.render("preview")
 
 	app.get "/reports", cacheMiddleWare, sendReportList
-
 	
 	app.get "/report/:_id", cacheMiddleWare, sendReport
 
@@ -138,8 +137,6 @@ main = (app, cacheConfig)->
 		.catch (boo)->
 			handleError res, boo
 
-	
-
 	app.put "/report/:_id", (req, res)->
 		Seq().seq ->
 			report  = new Report({_id: req.params._id})
@@ -149,15 +146,16 @@ main = (app, cacheConfig)->
 		.catch (boo)->
 			handleError res, boo
 	
-	app.get "/reports/refactor", (req, res)->
+	app.get "/refactorreports", (req, res)->
 		Seq().seq ->
 			Report.fetch {}, this
 		.flatten()
 		.seqEach (report)->
-			report.update $set: {tags: []}, this
+			json = report.data()
+			report.update $set: {tags: [json.database, json.collection]}, this
 		.unflatten()
 		.seq (list) ->
-			res.send("OK updated #{list.length} records")
+			res.send "OK updated #{list.length} records"
 		.catch (boo)->
 			handleError res, boo
 		
@@ -188,13 +186,14 @@ sendReport = (req, res)->
 			handleError res, boo
 
 sendReportList = (req, res)->
+		payload = {}
 		Seq().seq ->
 			logger.info util.format("Report.resolveCollection: #{Report.resolveCollection()}")
-			Report.fetch {}, {sort: {name: -1}, fields: ["_id", "name", "comments", "collection", "database"]}, this
+			query = {}
+			Report.fetch query, {sort: {name: -1}, fields: ["_id", "name", "comments", "collection", "database", "tags"]}, this
 		.seq (reports)->
 			logger.info "db\n#{_.keys(MongoDoc.db)}"
-			payload =
-				reports: (r.data() for r in reports)
+			payload.reports = (r.data() for r in reports)
 			res.setHeader "Content-Type", "application/json"
 			res.send util.format("%j", payload)
 		.catch (boo)->

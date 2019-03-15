@@ -233,7 +233,7 @@ Report.makeDefaultReport = (dbname, colname) ->
 		comment: "(Enter comment here)"
 		type: "find"
 		mode: "manual"
-		tags: []
+		tags: [dbname, colname]
 		parameters:
 			find:
 				selector: "object:{}"

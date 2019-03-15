@@ -126,6 +126,7 @@ window.ReportPreview = React.createClass({displayName: "ReportPreview",
     return state = {
       waiting: [],
       type: "sample doc",
+      tags: [],
       doc: null,
       csv: null,
       xhr: null,
@@ -153,7 +154,7 @@ window.ReportPreview = React.createClass({displayName: "ReportPreview",
     $("body").on("didUpdateQuery", (function(_this) {
       return function(e) {
         console.log("on didUpdateQuery", e);
-        if (e.updateSample) {
+        if (e.shouldUpdatePreview) {
           return _this.fetch(e.reportId);
         } else {
           return _this.fetchSampleDoc(e.reportId);
@@ -205,16 +206,6 @@ window.ReportPreview = React.createClass({displayName: "ReportPreview",
     console.log("ok Changed " + path + ", " + value);
     return this.setState({
       type: value
-    });
-  },
-  stringArrayDidChange: function(path, value) {
-    var values;
-    console.log("ok Changed " + path + ", " + value);
-    values = value.split(",").map(function(v) {
-      return v.trim();
-    });
-    return this.setState({
-      type: values
     });
   },
   monitorSize: function() {

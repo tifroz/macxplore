@@ -3,29 +3,32 @@ window.ReportMenuItem = React.createClass({displayName: "ReportMenuItem",
   render: function() {
     return React.createElement("div", {
       "className": "menu-item"
-    }, React.createElement("a", {
+    }, React.createElement("div", {
+      "className": "menu-item-header"
+    }, React.createElement("div", null, React.createElement("a", {
       "onClick": this.selectItem
-    }, this.props.report.name), React.createElement("div", {
-      "className": "menu-item-details"
-    }, React.createElement("div", null, React.createElement("span", null, this.props.report.database), React.createElement("span", null, "."), React.createElement("span", null, this.props.report.collection)), React.createElement("div", {
+    }, this.props.report.name)), React.createElement("div", {
       "className": "dropdown"
     }, React.createElement("a", {
       "id": "dLabel",
       "data-target": "#",
+      "href": "#",
       "data-toggle": "dropdown",
       "role": "button",
       "aria-haspopup": "true",
       "aria-expanded": "false"
-    }, "\t\t\t\t\t\tActions", React.createElement("span", {
-      "class": "caret"
-    })), React.createElement("ul", {
+    }, React.createElement("span", null, " "), React.createElement("span", {
+      "className": "caret"
+    }), React.createElement("span", null, " ")), React.createElement("ul", {
       "className": "dropdown-menu",
       "aria-labelledby": "dLabel"
     }, React.createElement("li", null, React.createElement("a", {
       "onClick": this.deleteItem
     }, "delete")), React.createElement("li", null, React.createElement("a", {
       "onClick": this.duplicateItem
-    }, "duplicate"))))));
+    }, "duplicate"))))), React.createElement("div", {
+      "className": "menu-item-details"
+    }, React.createElement("div", null, React.createElement("span", null, this.props.report.database), React.createElement("span", null, "."), React.createElement("span", null, this.props.report.collection))));
   },
   duplicateItem: function(e) {
     var params;
@@ -113,7 +116,15 @@ window.ReportCreate = React.createClass({displayName: "ReportCreate",
 
 window.ReportMenuList = React.createClass({displayName: "ReportMenuList",
   render: function() {
-    return React.createElement("nav", null, this.props.reports.map((function(_this) {
+    var filtered, tag;
+    console.log("Ok rendering ReportMenuList with tag", this.props.tag);
+    tag = this.props.tag;
+    filtered = this.props.reports.filter((function(_this) {
+      return function(r) {
+        return r.tags.includes(tag) || !tag;
+      };
+    })(this));
+    return React.createElement("nav", null, filtered.map((function(_this) {
       return function(r, i) {
         return React.createElement(ReportMenuItem, {
           "key": r._id,
@@ -126,8 +137,62 @@ window.ReportMenuList = React.createClass({displayName: "ReportMenuList",
   getDefaultProps: function() {
     var props;
     return props = {
+      tag: null,
       reports: [],
       ajax: (function() {})
+    };
+  }
+});
+
+window.TagItem = React.createClass({displayName: "TagItem",
+  render: function() {
+    return React.createElement("span", {
+      "className": (this.props.selected === this.props.tag || (!this.props.selected && !this.props.tag) ? "selected" : "")
+    }, React.createElement("a", {
+      "onClick": this.selectItem
+    }, this.props.tag || "All"));
+  },
+  getDefaultProps: function() {
+    var props;
+    return props = {
+      tag: ""
+    };
+  },
+  selectItem: function(e) {
+    e.preventDefault();
+    console.log("Ok update state with ", {
+      tag: this.props.tag
+    });
+    return this.props.onTagChanged(this.props.tag || null);
+  }
+});
+
+window.ReportTagList = React.createClass({displayName: "ReportTagList",
+  render: function() {
+    var tags;
+    tags = _.chain(this.props.reports).pluck("tags").flatten().compact().uniq().value().sort();
+    return React.createElement("div", {
+      "id": "tagList"
+    }, React.createElement(TagItem, {
+      "key": "_all",
+      "tag": "",
+      "selected": this.props.tag,
+      "onTagChanged": this.props.onTagChanged
+    }), tags.map((function(_this) {
+      return function(t, i) {
+        return React.createElement(TagItem, {
+          "key": t,
+          "tag": t,
+          "selected": _this.props.tag,
+          "onTagChanged": _this.props.onTagChanged
+        });
+      };
+    })(this)));
+  },
+  getDefaultProps: function() {
+    var props;
+    return props = {
+      reports: []
     };
   }
 });
@@ -139,13 +204,29 @@ window.Menu = React.createClass({displayName: "Menu",
     return state = {
       collections: [],
       reports: [],
+      tag: null,
       xhr: null
     };
   },
+  tagDidChange: function(tag) {
+    return this.setState({
+      tag: tag
+    });
+  },
   componentDidMount: function() {
-    return this.ajax({
+    this.ajax({
       url: "/reports"
     });
+    return $("body").on("didUpdateQuery", (function(_this) {
+      return function(e) {
+        console.log("on didUpdateQuery", e);
+        if (e.path === "tags") {
+          return _this.ajax({
+            url: "/reports"
+          });
+        }
+      };
+    })(this));
   },
   render: function() {
     return React.createElement("div", null, React.createElement(XHRError, {
@@ -153,9 +234,15 @@ window.Menu = React.createClass({displayName: "Menu",
     }), React.createElement(ReportCreate, {
       "collections": this.state.collections,
       "ajax": this.ajax
+    }), React.createElement(ReportTagList, {
+      "reports": this.state.reports,
+      "ajax": this.ajax,
+      "onTagChanged": this.tagDidChange,
+      "tag": this.state.tag
     }), React.createElement(ReportMenuList, {
       "reports": this.state.reports,
-      "ajax": this.ajax
+      "ajax": this.ajax,
+      "tag": this.state.tag
     }));
   }
 });

@@ -28,6 +28,7 @@ app
 
 xplore = 
 	start: (mongoConfig, xploreConfig, fn)->
+		logger.info "starting xplore"
 		{port, logger, cache} = xploreConfig
 		port = port || 4280
 		logger = logger || console
@@ -47,7 +48,7 @@ xplore =
 			logger.log "MongoDoc.db.report #{MongoDoc.db.report}, #{MongoDoc.db.databases.xplore.report}"
 			handlers.main(app, cacheConfig)
 			app.listen(port)
-			logger.log "Xplore server listening on port #{port}"
+			logger.info "Xplore server listening on port #{port}"
 			fn?(null)
 		.catch (boo)->
 			logger.error boo

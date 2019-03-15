@@ -93,6 +93,7 @@ window.ReportPreview = React.createClass
 		state =
 			waiting: []
 			type: "sample doc"
+			tags: []
 			doc: null
 			csv: null
 			xhr: null
@@ -111,7 +112,7 @@ window.ReportPreview = React.createClass
 			
 		$("body").on "didUpdateQuery", (e)=>
 			console.log "on didUpdateQuery", e
-			if e.updateSample
+			if e.shouldUpdatePreview
 				@fetch e.reportId
 			else
 				@fetchSampleDoc e.reportId
@@ -162,11 +163,6 @@ window.ReportPreview = React.createClass
 	didChange: (path, value)->
 		console.log "ok Changed #{path}, #{value}"
 		@setState type: value
-	
-	stringArrayDidChange: (path, value)->
-		console.log "ok Changed #{path}, #{value}"
-		values = value.split(",").map( (v)->v.trim() )
-		@setState type: values
 
 	monitorSize: ->
 		if (h = $("#preview").height()) isnt @height
