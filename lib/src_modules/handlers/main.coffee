@@ -2,7 +2,6 @@ _							= require 'underscore'
 Report				= require('models').Report
 util					= require 'util'
 Seq						= require 'seq'
-logger				= require 'maclogger'
 MongoDoc			= require 'macmodel'
 helpers				= require "helpers"
 json2Csv			= helpers.streams.json2Csv
@@ -10,9 +9,12 @@ truncate			= helpers.streams.truncate
 cursor2JsonArray	= helpers.streams.cursor2JsonArray
 apicache			= require("apicache")
 
+logger				= console
+
 #cache = helpers.xpressCache
 
 handleError = (res, boo)->
+	logger.error boo
 	res.setHeader "Content-Type", "application/json"
 	res.send 500, util.format("%j", message: boo.message, stack: boo.stack)
 

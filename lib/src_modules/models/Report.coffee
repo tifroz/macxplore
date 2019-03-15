@@ -1,12 +1,13 @@
 _							= require 'underscore'
 MongoDoc			= require 'macmodel'
 events				= require 'events'
-logger				= require 'maclogger'
 Seq						= require 'seq'
 coffee				= require 'coffeescript'
 util					= require 'util'
 streamify			= require "stream-array"
 mr2FlatJson		= require("helpers").streams.mr2FlatJson
+
+logger				= console
 
 
 

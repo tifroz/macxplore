@@ -1,5 +1,5 @@
 mcache            	= require "memory-cache"
-#logger				= require 'logger'
+logger				= console
 
 cache = 
   

@@ -1,5 +1,5 @@
 cmd					 	= require 'commander'
-logger				= require 'maclogger'
+logger					= console
 
 
 cmd

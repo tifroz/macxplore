@@ -1,7 +1,8 @@
 through 	= require 'through'
 _					= require 'underscore'
-logger		= require 'maclogger'
 util			= require 'util'
+
+logger				= console
 
 
 
