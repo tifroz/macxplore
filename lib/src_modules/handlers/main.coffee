@@ -149,6 +149,8 @@ main = (app, cacheConfig)->
 			handleError res, boo
 	
 	app.get "/refactorreports", (req, res)->
+		res.send "Refactoring functionality removed"
+		###
 		Seq().seq ->
 			Report.fetch {}, this
 		.flatten()
@@ -160,6 +162,7 @@ main = (app, cacheConfig)->
 			res.send "OK updated #{list.length} records"
 		.catch (boo)->
 			handleError res, boo
+		###
 		
 
 getReport = (_id, fn)->

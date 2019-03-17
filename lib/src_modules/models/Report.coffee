@@ -222,7 +222,7 @@ Report.makeCopy = (original) ->
 	og = original.data()
 	data = 
 		name: "#{og.name} copy"
-	for attributeName in ["database", "collection", "comment", "type", "mode", "parameters"]
+	for attributeName in ["database", "collection", "comment", "type", "mode", "parameters", "tags"]
 		data[attributeName] = og[attributeName]
 	return new Report(data)
 
