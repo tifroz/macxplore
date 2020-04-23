@@ -132,8 +132,8 @@ window.TypeSelector = React.createClass
 				{
 					switch @props.type
 						when "aggregate"
-							<a href="https://docs.mongodb.org/v3.0/meta/aggregation-quick-reference/" target="_blank">Aggregation quick reference</a>
-							<a href="https://docs.mongodb.org/v3.0/reference/operator/query/" target="_blank">Aggregation query selectors &amp; operators</a>
+							<a href="https://docs.mongodb.org/v4.0/meta/aggregation-quick-reference/" target="_blank"> Aggregation quick reference</a>
+							<a href="https://docs.mongodb.org/v4.0/reference/operator/query/" target="_blank"> Aggregation query selectors &amp; operators</a>
 						else
 							<div></div>
 				}
