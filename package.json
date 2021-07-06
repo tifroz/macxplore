@@ -17,18 +17,18 @@
     "commander": "^2.19.0",
     "compression":"1.7.4",
     "express": "^4.16.4",
-    "maclogger": "0.x",
+    "maclogger": "tifroz/maclogger",
     "macmodel": "tifroz/macmodel",
     "macmongo": "tifroz/macmongo",
     "memory-cache": "0.2.x",
     "apicache": "1.2.x",
     "morgan": "1.5.x",
-    "pug": "2.0.4",
-    "seq": "0.3.x",
+    "pug": "^2.0.4",
+    "seq": "^0.3.5",
     "serve-static": "^1.14.1",
     "stream-array": "^1.1.2",
-    "through": "2.3.8",
-    "underscore": "1.7.x"
+    "through": "^2.3.8",
+    "underscore": "^1.12.1"
   },
   "devDependencies": {}
 }
