@@ -26,7 +26,7 @@ app
 	.use(xpressLogger())
 	.use(xpressBodyParser())
 
-xplore = 
+xplore =
 	start: (mongoConfig, xploreConfig, fn)->
 		logger.info "Will start Xplore"
 		{port, logger, cache} = xploreConfig
