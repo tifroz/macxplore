@@ -76,19 +76,26 @@ main = (app, cacheConfig)->
 					stream.pipe(json2Csv()).pipe(res)
 		.catch (boo)->
 			handleError res, boo
-	
 
 	app.get "/report/sampledoc/:_id", cacheMiddleWare, (req, res)->
 		dbname = null
 		colname = null
 		report = new Report(_id: req.params._id)
+		limit = 10
+		if req.query.limit
+			queryLimit = parseInt(req.query.limit, 10)
+			if !isNaN(queryLimit)
+				limit = Math.max(1, Math.min(300, queryLimit))
+
 		Seq().seq ->
 			report.fillFromStorage this
 		.seq ->
 			report.getSampleCursor this
 		.seq (cursor)->
 			res.writeHead 200, "Content-Type": "application/json"
-			cursor.limit(5).stream().pipe(cursor2JsonArray()).pipe(res)
+			cursor.limit(limit).stream().pipe(cursor2JsonArray()).pipe(res)
+		.catch (boo)->
+			handleError res, boo
 	
 
 	app.get "/:dbname/collections", cacheMiddleWare, (req, res)->

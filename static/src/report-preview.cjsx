@@ -124,6 +124,11 @@ window.ReportPreview = React.createClass
 					alert "A query for sampled results is already in progress"
 				else
 					@fetch e.reportId
+		
+		$("body").on "didUpdateMaxDocs", (e)=>
+			console.log "on didUpdateMaxDocs", e
+			if e.maxDocs
+				@setState maxDocs: e.maxDocs
 
 		@sizeMonitor = setInterval @monitorSize, 500
 
@@ -176,7 +181,9 @@ window.ReportPreview = React.createClass
 
 
 	fetchSampleDoc: (reportId)->
-		path = "/report/sampledoc/#{reportId}"
+		console.log "on fetchSampleDoc", @state
+		limit = @state.maxDocs || 10
+		path = "/report/sampledoc/#{reportId}?limit=#{limit}"
 		@ajax path, (xhr, update)=>
 			@doneWithFetch path
 			if xhr.status > 0 and xhr.status < 400

@@ -24,7 +24,7 @@ window.JSEditor = React.createClass
 
 	componentDidMount:->
 		@configureAceEditor()
-		@contentDidChangeDebounced = _.debounce(@contentDidChangeDebounced, 500)
+		@contentDidChangeDebounced = _.debounce(@contentDidChangeDebounced, 1500)
 		@adjustRowHeight()
 	
 	componentWillUnmount: ->
@@ -148,26 +148,19 @@ window.TypeSelector = React.createClass
 
 window.ModeSelector = React.createClass
 	render: ->
-		<div className="run-options">
-			<div className="btn-group" data-toggle="buttons">
+		<div className="run-options" style={{display: 'flex', alignItems: 'center', gap: '10px'}}>
+			<div>
 				{
-					mode = @props.report.mode
-					@props.modes.sort().map (t, i)=>
-						checked = t is mode
-						className = "btn btn-primary btn-xs"
-						if checked
-							className += " active"
-						<label key={i} className={className} onClick={@selectionDidChange}>
-							<input type="radio" name="mode" autoComplete="off" value={t} checked={checked} onChange={(->)}/>
-							<span> {t} </span>
-						</label>
-
+					<label style={{marginRight: '10px'}}>
+						max docs
+						<input id="maxDocs" type="number" defaultValue="10" min="1" max="300" style={{marginLeft: '5px', width: '60px'}} onChange={@maxDocsDidChange} ref="maxDocs"/>
+					</label>
 				}
 			</div>
-			<div className="updateSampleButton btn-group" onClick={@didRequestSampleUpdate}>
+			<div className="updateSampleButton btn-group">
 				{
 					if @props.report.mode is "manual"
-						<div className="btn btn-xs btn-danger">
+						<div className="btn btn-xs btn-danger" onClick={@didRequestSampleUpdate}>
 							Update sample result
 						</div>
 				}
@@ -178,10 +171,10 @@ window.ModeSelector = React.createClass
 		e = $.Event( "didRequestSampleUpdated", {reportId: @props.report._id, updateSample: true} )
 		$("body").trigger e
 	
-	selectionDidChange: (e)->
-		input = $("input", e.currentTarget)[0]
-		input.checked = true
-		@props.didChange @props.path, input.value
+	maxDocsDidChange: (e)->
+		maxDocs = parseInt($(@refs.maxDocs).val(), 10)
+		e = $.Event( "didUpdateMaxDocs", {reportId: @props.report._id, maxDocs: maxDocs} )
+		$("body").trigger e
 
 
 window.MongoReportEditor = React.createClass
@@ -197,10 +190,8 @@ window.MongoReportEditor = React.createClass
 	render: ->
 		console.log "MongoReportEditor rendering...", @props
 		types = _.keys @props.report.parameters
-		modes = ["manual", "automatic"]
 		tagsStr = @props.report.tags.join(" ") or "no tags"
 		console.log "parameters", types
-		console.log "modes ", modes
 		
 		<div>
 			<div>
@@ -220,7 +211,7 @@ window.MongoReportEditor = React.createClass
 					<TypeSelector type={@props.report.type} types={types} path="type" didChange={@props.didChange}/>
 				</div>
 				<div style={{paddingLeft: "50px"}}>
-					<ModeSelector report={@props.report} modes={modes} path="mode" didChange={@props.didChange}/>
+					<ModeSelector report={@props.report} path="mode" didChange={@props.didChange}/>
 				</div>
 			</div>
 			<div>
